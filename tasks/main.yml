@@ -1,8 +1,44 @@
 ---
 # tasks file for ansible-role-zfsonlinux
 
-- include: redhat.yml
-  when: ansible_os_family == "RedHat"
+  - name: install ZFS repo
+    package:
+      pkg: "http://download.zfsonlinux.org/epel/zfs-release.el{{ ansible_distribution_major_version }}.noarch.rpm"
+      state: installed
 
-- include: debian.yml
-  when: ansible_os_family == "Debian"
+  - name: install ZFS and kernel-devel
+    package: 
+      name: "{{ item }}"
+      state: installed
+    with_items:
+      - kernel-devel
+      - zfs
+
+  - name: add bash completion for zfs-release
+    copy: 
+      src: "bash_completion.d/zfs"
+      dest: "/etc/bash_completion.d"
+      owner: "root"
+      group: "root"
+      mode: "u=rw,g=r,o=r"
+  
+  - name: update system
+    package:
+      name: "*"
+      state: latest
+      
+  - name: add ZFS kernel module
+    modprobe:
+      name: zfs
+      state: present
+      
+  - name: enable ZFS services
+    service:
+      name: "{{ item }}"
+      enabled: yes
+    with_items:
+      - zfs-import-scan
+      - zfs-mount
+      - zfs-share
+      - zfs-zed
+      - zfs.target

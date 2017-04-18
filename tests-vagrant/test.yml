@@ -1,0 +1,5 @@
+---
+- hosts: ansible-zfsonlinux
+
+  roles:
+    - zfsonlinux
