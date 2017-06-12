@@ -1,0 +1,28 @@
+---
+  - name: setup zfs-auto-snapshot cron jobs
+    copy: 
+      src: "zfs-auto-snapshot/etc/{{ item.src }}"
+      dest: "/etc/{{ item.dst }}"
+      owner: "root"
+      group: "root"
+      mode: "u=rwx,g=rx,o=rx"
+    with_items:
+      - { src: 'zfs-auto-snapshot.cron.hourly', dst: 'cron.hourly/zfs-auto-snapshot'}
+      - { src: 'zfs-auto-snapshot.cron.daily', dst: 'cron.daily/zfs-auto-snapshot'}
+      - { src: 'zfs-auto-snapshot.cron.weekly', dst: 'cron.weekly/zfs-auto-snapshot'}
+
+  - name: setup man page for zfs-auto-snapshot
+    copy:
+      src: "zfs-auto-snapshot/src/zfs-auto-snapshot.8"
+      dest: "/usr/local/share/man/man8/zfs-auto-snapshot.8"
+      owner: "root"
+      group: "root"
+      mode: "u=rw,g=r,o=r"
+
+  - name: setup zfs-auto-snapshot tool
+    copy:
+      src: "zfs-auto-snapshot/src/zfs-auto-snapshot.sh"
+      dest: "/usr/local/sbin/zfs-auto-snapshot"
+      owner: "root"
+      group: "root"
+      mode: "u=rwx,g=rx,o=rx"

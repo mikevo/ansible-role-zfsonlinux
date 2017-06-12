@@ -37,8 +37,31 @@
       name: "{{ item }}"
       enabled: yes
     with_items:
-      - zfs-import-scan
+      - nfs
       - zfs-mount
       - zfs-share
       - zfs-zed
       - zfs.target
+      
+  - name: disable ZFS services
+    service:
+      name: "{{ item }}"
+      enabled: no
+    with_items:
+      - zfs-import-scan
+      
+  - name: make sure traffic can pass through firewall
+    firewalld:
+      service: "{{ item }}"
+      permanent: true
+      state: enabled
+    with_items:
+      - mountd
+      - rpc-bind
+      - nfs
+    notify:
+      - restart firewalld
+      
+  - name: setup zfs-auto-snapshot
+    include: tasks/zfs-auto-snapshot.yml
+    when: zfs_auto_snapshot == true

@@ -1,2 +1,4 @@
 ---
 # defaults file for ansible-role-zfsonlinux
+firewall_service: firewalld
+zfs_auto_snapshot: false
