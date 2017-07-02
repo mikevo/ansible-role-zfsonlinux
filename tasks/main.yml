@@ -21,11 +21,6 @@
       owner: "root"
       group: "root"
       mode: "u=rw,g=r,o=r"
-  
-  - name: update system
-    package:
-      name: "*"
-      state: latest
       
   - name: add ZFS kernel module
     modprobe:
