@@ -3,7 +3,7 @@
 
   - name: install ZFS repo
     package:
-      pkg: "http://download.zfsonlinux.org/epel/zfs-release.el{{ ansible_distribution_major_version }}.noarch.rpm"
+      pkg: "http://download.zfsonlinux.org/epel/zfs-release.el7_4.noarch.rpm"
       state: installed
 
   - name: install ZFS and kernel-devel
