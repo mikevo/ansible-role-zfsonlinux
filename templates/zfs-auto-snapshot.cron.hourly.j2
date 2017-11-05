@@ -1,0 +1,12 @@
+#!/bin/sh
+
+{% if zfs_snapshots.hourly is defined %}
+# Only call zfs-auto-snapshot if it's available
+which zfs-auto-snapshot > /dev/null || exit 0
+
+{% for volume in zfs_snapshots.hourly %}
+/usr/local/sbin/zfs-auto-snapshot --quiet --syslog --label=hourly --keep={{ volume.keep }} {{ volume.name }}
+{% endfor %}
+{% else %}
+# Do not take any snapshots
+{% endif %}

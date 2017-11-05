@@ -1,13 +1,16 @@
 ---
   - name: setup zfs-auto-snapshot cron jobs
-    copy: 
-      src: "zfs-auto-snapshot/etc/zfs-auto-snapshot.cron.{{ item }}"
+    template: 
+      src: "zfs-auto-snapshot.cron.{{ item }}.j2"
       dest: "/etc/cron.{{ item }}/zfs-auto-snapshot"
       owner: "root"
       group: "root"
       mode: "u=rwx,g=rx,o=rx"
     with_items:
-      - "{{ zfs_snapshots }}"
+      - hourly
+      - daily
+      - weekly
+      - monthly
 
   - name: setup man page for zfs-auto-snapshot
     copy:
