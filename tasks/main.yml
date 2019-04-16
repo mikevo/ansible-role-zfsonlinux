@@ -33,6 +33,8 @@
       enabled: yes
     with_items:
       - nfs
+      - zfs-import-cache
+      - zfs-import.target
       - zfs-mount
       - zfs-share
       - zfs-zed
