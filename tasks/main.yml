@@ -1,64 +1,64 @@
 ---
 # tasks file for ansible-role-zfsonlinux
 
-  - name: install ZFS repo
-    package:
-      pkg: "http://download.zfsonlinux.org/epel/zfs-release.el7_4.noarch.rpm"
-      state: installed
+- name: install ZFS repo
+  package:
+    pkg: 'http://download.zfsonlinux.org/epel/zfs-release.el7_4.noarch.rpm'
+    state: installed
 
-  - name: install ZFS and kernel-devel
-    package: 
-      name: "{{ item }}"
-      state: installed
-    with_items:
-      - kernel-devel
-      - zfs
+- name: install ZFS and kernel-devel
+  package:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+    - kernel-devel
+    - zfs
 
-  - name: add bash completion for zfs-release
-    copy: 
-      src: "bash_completion.d/zfs"
-      dest: "/etc/bash_completion.d"
-      owner: "root"
-      group: "root"
-      mode: "u=rw,g=r,o=r"
-      
-  - name: add ZFS kernel module
-    modprobe:
-      name: zfs
-      state: present
-      
-  - name: enable ZFS services
-    service:
-      name: "{{ item }}"
-      enabled: yes
-    with_items:
-      - nfs
-      - zfs-import-cache
-      - zfs-import.target
-      - zfs-mount
-      - zfs-share
-      - zfs-zed
-      - zfs.target
-      
-  - name: disable ZFS services
-    service:
-      name: "{{ item }}"
-      enabled: no
-    with_items:
-      - zfs-import-scan
-      
-  - name: make sure traffic can pass through firewall
-    firewalld:
-      service: "{{ item }}"
-      permanent: true
-      state: enabled
-    with_items:
-      - mountd
-      - rpc-bind
-      - nfs
-    notify:
-      - restart firewalld
-      
-  - name: setup zfs-auto-snapshot
-    import_tasks: tasks/zfs-auto-snapshot.yml
-    when: zfs_auto_snapshot == true
+- name: add bash completion for zfs-release
+  copy:
+    src: 'bash_completion.d/zfs'
+    dest: '/etc/bash_completion.d'
+    owner: 'root'
+    group: 'root'
+    mode: 'u=rw,g=r,o=r'
+
+- name: add ZFS kernel module
+  modprobe:
+    name: zfs
+    state: present
+
+- name: enable ZFS services
+  service:
+    name: '{{ item }}'
+    enabled: yes
+  with_items:
+    - nfs
+    - zfs-import-cache
+    - zfs-import.target
+    - zfs-mount
+    - zfs-share
+    - zfs-zed
+    - zfs.target
+
+- name: disable ZFS services
+  service:
+    name: '{{ item }}'
+    enabled: no
+  with_items:
+    - zfs-import-scan
+
+- name: make sure traffic can pass through firewall
+  firewalld:
+    service: '{{ item }}'
+    permanent: true
+    state: enabled
+  with_items:
+    - mountd
+    - rpc-bind
+    - nfs
+  notify:
+    - restart firewalld
+
+- name: setup zfs-auto-snapshot
+  import_tasks: tasks/zfs-auto-snapshot.yml
+  when: zfs_auto_snapshot == true

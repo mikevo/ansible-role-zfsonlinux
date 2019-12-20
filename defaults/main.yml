@@ -3,7 +3,7 @@
 firewall_service: firewalld
 zfs_auto_snapshot: false
 zfs_snapshots:
-  hourly:      
+  hourly:
     - name: '//'
       keep: 24
   daily:
